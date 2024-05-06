@@ -1,10 +1,14 @@
 import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthProvider';
 
 const Login = () => {
     const { userLogin } = useContext(AuthContext)
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location.state?.from?.pathname || '/';
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -15,7 +19,28 @@ const Login = () => {
         userLogin(email, password)
             .then(result => {
                 const user = result.user;
-                console.log(user);
+
+
+                const currentUser = {
+                    email: user.email,
+                }
+                console.log(currentUser);
+
+                fetch('https://genius-car-server-five-xi.vercel.app/jwt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(currentUser)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        localStorage.setItem('Genius-Token', data.token);
+                        navigate(from, { replace: true })
+                    })
+
+                    .catch(error => console.error(error))
             })
 
             .catch(error => console.error(error))

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react';
 import app from '../Firebase/firebase.init';
 
@@ -12,27 +12,39 @@ const AuthProvider = ({ children }) => {
     const [loader, setLoader] = useState(true)
 
     const createUser = (email, password) => {
+        setLoader(true)
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
     const userLogin = (email, password) => {
+        setLoader(true)
         return signInWithEmailAndPassword(auth, email, password);
+    }
+
+    const userLogOut = () => {
+        setLoader(true)
+        localStorage.removeItem('Genius-Token')
+        return signOut(auth);
     }
 
     const authInfo = {
         user,
         loader,
+        setLoader,
         createUser,
-        userLogin
+        userLogin,
+        userLogOut
     }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             console.log(currentUser);
             setUser(currentUser);
+            setLoader(false)
         });
-
-        return () => unsubscribe();
+        return () => {
+            return unsubscribe()
+        };
     }, [])
 
     return (
