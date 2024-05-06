@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthProvider';
+import { JwtAuthToken } from '../../API/Api';
 
 const SignUp = () => {
     const { createUser } = useContext(AuthContext)
@@ -12,11 +13,13 @@ const SignUp = () => {
         const email = form.email.value;
         const password = form.password.value;
         const name = form.name.value;
+        console.log(email, password, name)
 
         createUser(email, password)
             .then(result => {
                 const user = result.user;
                 console.log(user);
+                JwtAuthToken(user);
             })
             .catch(error => console.error(error))
 

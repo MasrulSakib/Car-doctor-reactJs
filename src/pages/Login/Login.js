@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthProvider';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Login = () => {
     const { userLogin } = useContext(AuthContext)
@@ -70,6 +71,7 @@ const Login = () => {
                             <button className="btn btn-primary">Login</button>
                         </div>
                         <p className='mx-auto my-4'>New to Genius Car? <Link className='text-orange-600 font-bold' to='/signup'>Sign Up</Link></p>
+                        <SocialLogin></SocialLogin>
                     </form>
                 </div>
                 <div>
